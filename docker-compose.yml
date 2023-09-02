@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  vpn:
+    container_name: nordvpn
+    image: ghcr.io/bubuntux/nordlynx
+    cap_add:
+        - NET_ADMIN               # Required
+        - SYS_MODULE
+    ports:
+        - "8080:8080" # port I want forwarded for the p-geo container
+    environment:                # Review https://github.com/bubuntux/nordvpn#environment-variables
+        - PRIVATE_KEY=eIy00oQDNyEYog1A4+c0Apcdu15Xptq8m+S7Utdbm1Q= # Required
+        - QUERY=filters\[servers_groups\]\[identifier\]=legacy_p2p
+        - CONNECT=Argentina
+        - NET_LOCAL=192.168.0.0/16
+        - TECHNOLOGY=NordLynx
+        - TZ=America/New_York
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1  # Recommended if using ipv4 only
+
+  web_service:
+    container_name: p-geo
+    build: ./web_service
+    network_mode: "service:vpn"
+    depends_on:
+      - vpn
