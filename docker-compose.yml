@@ -21,7 +21,7 @@ services:
 
   web_service:
     container_name: p-geo
-    build: ./web_service
+    image: southamerica-west1-docker.pkg.dev/peaceful-surge-390414/cloud-run-source-deploy/p-geo/getlocation:a0d66e6483a86a8fbb20bed4ddb7e2d54698c4aa
     network_mode: "service:vpn"
     depends_on:
       - vpn
